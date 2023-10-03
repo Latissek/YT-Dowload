@@ -1,4 +1,3 @@
-#Need FFMPEG and pytube | pip install pytube , does not work on non-own private videos on own put ,use_oauth=True, allow_oauth_cache=True on line 10
 from pytube import YouTube
 from tqdm import tqdm
 import os
