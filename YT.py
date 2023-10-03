@@ -1,25 +1,43 @@
 #Need FFMPEG and pytube | pip install pytube , does not work on non-own private videos on own put ,use_oauth=True, allow_oauth_cache=True on line 10
 from pytube import YouTube
+from tqdm import tqdm
+import os
 import subprocess
-##Global variable
 
+# Define a global progress bar variable
+pbar = None
+
+def progress_bar_func(stream, chunk, bytes_remaining):
+    global pbar
+    total_size = stream.filesize
+    bytes_downloaded = total_size - bytes_remaining
+
+    # Update the progress bar
+    pbar.update(bytes_downloaded - pbar.n)
 
 ##Download function, self asking, if called again it will add/dont_add the audio prefix
 def download(uservideo, u_video):
+    global pbar
     video = u_video
-    yt = YouTube(uservideo)
+    yt = YouTube(uservideo, on_progress_callback=progress_bar_func)
     print(yt.streams.filter(file_extension='mp4'))
-    streamchoise = int(input('steamid: '))
-    stream = yt.streams.get_by_itag(streamchoise)
+    streamchoice = int(input('streamid: '))
+    stream = yt.streams.get_by_itag(streamchoice)
     if video is None:
         video = input('Video? y/n: ')
     if video == 'n':
+        audio_filename = 'audio_' + stream.default_filename
+        # Create the progress bar
+        pbar = tqdm(total=stream.filesize, unit='B', unit_scale=True)
         stream.download(filename_prefix='audio_')
-        return 'audio_'+stream.default_filename
+        pbar.close()
+        return audio_filename
     else:
-        
+        # Create the progress bar
+        pbar = tqdm(total=stream.filesize, unit='B', unit_scale=True)
         stream.download()
-        return stream.default_filename        
+        pbar.close()
+        return stream.default_filename
 
 ## Merge video and audio (optional)
 def merge(video, audio):
@@ -41,6 +59,25 @@ def merge(video, audio):
     ]
     subprocess.run(cmd)
 
+def delteFile(filename):
+    # Get the current directory of the script
+    current_directory = os.getcwd()
+
+    # Specify the file name you want to delete
+    file_name = filename
+
+    # Create the full file path by joining the directory and file name
+    file_path = os.path.join(current_directory, file_name)
+
+    # Check if the file exists before attempting to delete it
+    if os.path.exists(file_path):
+        # Delete the file
+        os.remove(file_path)
+        print(f"{file_name} has been deleted.")
+    else:
+        print(f"{file_name} does not exist in the current directory.")
+
+#main
 video = None
 uservideo = input('YT link: ')
 function_output = download(uservideo,video)
@@ -57,3 +94,7 @@ if u_continue == 'y':
         u_video = function_output
         u_audio = download(uservideo,video)
     merge(u_video, u_audio)
+    u_delete = input('Do you want to delte the subfiles? y/n: ')
+    if u_delete == 'y':
+        delteFile(u_audio)
+        delteFile(u_video)
