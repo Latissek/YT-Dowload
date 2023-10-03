@@ -3,16 +3,12 @@ from pytube import YouTube
 from tqdm import tqdm
 import os
 import subprocess
-
-# Define a global progress bar variable
 pbar = None
 
 def progress_bar_func(stream, chunk, bytes_remaining):
     global pbar
     total_size = stream.filesize
     bytes_downloaded = total_size - bytes_remaining
-
-    # Update the progress bar
     pbar.update(bytes_downloaded - pbar.n)
 
 ##Download function, self asking, if called again it will add/dont_add the audio prefix
@@ -60,16 +56,9 @@ def merge(video, audio):
     subprocess.run(cmd)
 
 def delteFile(filename):
-    # Get the current directory of the script
     current_directory = os.getcwd()
-
-    # Specify the file name you want to delete
     file_name = filename
-
-    # Create the full file path by joining the directory and file name
     file_path = os.path.join(current_directory, file_name)
-
-    # Check if the file exists before attempting to delete it
     if os.path.exists(file_path):
         # Delete the file
         os.remove(file_path)
