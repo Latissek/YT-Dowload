@@ -2,6 +2,7 @@ from pytube import YouTube
 from tqdm import tqdm
 import os
 import subprocess
+import sys
 
 # Initialize the progress bar
 pbar = None
@@ -17,10 +18,18 @@ def progress_bar_func(stream, chunk, bytes_remaining):
 def download(uservideo, u_video):
     global pbar
     video = u_video
-    yt = YouTube(uservideo, on_progress_callback=progress_bar_func)
+    #yt = YouTube(uservideo, on_progress_callback=progress_bar_func)
 
     # Prompt the user to select a stream
-    print(yt.streams.filter(file_extension='mp4'))
+    #print(yt.streams.filter(file_extension='mp4'))
+    try:
+        yt = YouTube(uservideo, on_progress_callback=progress_bar_func)
+
+    # Prompt the user to select a stream
+        print(yt.streams.filter(file_extension='mp4'))
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        sys.exit()
     streamchoice = int(input('streamid: '))
     stream = yt.streams.get_by_itag(streamchoice)
 
