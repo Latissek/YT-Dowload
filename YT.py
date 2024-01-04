@@ -68,9 +68,9 @@ def download(uservideo, u_video):
     # Get the stream by the itag
     stream = yt.streams.get_by_itag(streamchoice)
 
-    # Prompt the user to download video or audio
+    # Prompt the user if the download is video or audio, try to guess based on the streamchoice
     if video is None:
-        if streamchoice == 251:
+        if streamchoice == 251 or streamchoice == 140:
             video = 'n'
         elif streamchoice == 137:
             video = 'y'
@@ -136,6 +136,9 @@ uservideo = input('YT link: ')
 function_output = download(uservideo, video)
 # Prompt the user to continue
 u_continue = input('Do you want to continue? y/n: ')
+# If user entered nothing then continue
+if u_continue == '':
+    u_continue = 'y'
 if u_continue == 'y':
     u_video = None
     u_audio = None
@@ -152,6 +155,8 @@ if u_continue == 'y':
     merge(u_video, u_audio)
     # Prompt the user to delete the separate video and audio files
     u_delete = input('Do you want to delte the subfiles? y/n: ')
+    if u_delete == '':
+        u_delete = 'y'
     if u_delete == 'y':
         delteFile(u_audio)
         delteFile(u_video)
