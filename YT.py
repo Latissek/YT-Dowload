@@ -14,6 +14,8 @@ def progress_bar_func(stream, chunk, bytes_remaining):
     bytes_downloaded = total_size - bytes_remaining
     pbar.update(bytes_downloaded - pbar.n)
 
+
+
 # Download function
 def download(uservideo, u_video):
     global pbar
@@ -94,6 +96,8 @@ def download(uservideo, u_video):
         pbar.close()
         return stream.default_filename
 
+
+
 # Merge video and audio (optional)
 def merge(video, audio):
     input_video = video
@@ -116,6 +120,8 @@ def merge(video, audio):
     ]
     subprocess.run(cmd)
 
+
+
 # Delete a file
 def delteFile(filename):
     current_directory = os.getcwd()
@@ -129,6 +135,8 @@ def delteFile(filename):
         print(f"{file_name} has been deleted.")
     else:
         print(f"{file_name} does not exist in the current directory.")
+
+
 
 # Main function
 video = None
