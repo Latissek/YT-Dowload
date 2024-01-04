@@ -18,24 +18,64 @@ def progress_bar_func(stream, chunk, bytes_remaining):
 def download(uservideo, u_video):
     global pbar
     video = u_video
-    #yt = YouTube(uservideo, on_progress_callback=progress_bar_func)
+    default_c = None
 
     # Prompt the user to select a stream
-    #print(yt.streams.filter(file_extension='mp4'))
     try:
         yt = YouTube(uservideo, on_progress_callback=progress_bar_func)
 
     # Prompt the user to select a stream
-        print(yt.streams.filter(file_extension='mp4'))
+        # If u_video is y then print the video streams
+        if video == 'y':
+            # Check if 1080p is available
+            if yt.streams.get_by_itag(137) is not None:
+                print('1080p available ; tag 137')
+                default_c = 137
+            else:
+                print('1080p unavailable')
+            print(yt.streams.filter(only_video=True))
+        # If u_video is n then print the audio streams
+        elif video == 'n':
+            # Check for the highest quality audio stream
+            if yt.streams.get_by_itag(251) is not None:
+                print('Highest quality audio available ; tag 251')
+                default_c = 251
+            print(yt.streams.filter(only_audio=True))
+        # If u_video is None then print both the video and audio streams and check if 1080p is available
+        else:
+            # Check if 1080p is available
+            if yt.streams.get_by_itag(137) is not None:
+                print('1080p available ; tag 137')
+                default_c = 137
+            else:
+                print('1080p unavailable')
+            print(yt.streams.filter(file_extension='mp4'))
     except Exception as e:
         print(f"An error occurred: {e}")
         sys.exit()
-    streamchoice = int(input('streamid: '))
+    # Prompt the user to select a stream
+    try:
+        streamchoice = int(input('streamid: '))
+    # If the user does not select a stream then use the default_c
+    except Exception as e:
+        #! Check if default_c is set if yes then use it else exit
+        if default_c is None:
+            print(f"An error occurred: {e}")
+            sys.exit()
+        else:
+            streamchoice = default_c
+            print('Used default_c')
+    # Get the stream by the itag
     stream = yt.streams.get_by_itag(streamchoice)
 
     # Prompt the user to download video or audio
     if video is None:
-        video = input('Video? y/n: ')
+        if streamchoice == 251:
+            video = 'n'
+        elif streamchoice == 137:
+            video = 'y'
+        else:
+            video = input('Video? y/n: ')
 
     # Download the audio file
     if video == 'n':
@@ -62,7 +102,7 @@ def merge(video, audio):
 
     # Prompt the user to specify the output file name
     if output_video == '':
-        output_video = 'o_'+video
+        output_video = 'ouput_'+video
 
     # Run the ffmpeg command to merge the files
     cmd = [
