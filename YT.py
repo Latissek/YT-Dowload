@@ -102,12 +102,15 @@ def download(uservideo, u_video):
 def merge(video, audio):
     input_video = video
     input_audio = audio
-    output_video = input('Output put.mp4 at the end: ')
+    output_video = input('Output put .mp4 at the end: ')
 
     # Prompt the user to specify the output file name
     if output_video == '':
         output_video = 'ouput_'+video
 
+    # Add directory path to the output file name
+    output_video = 'Output/' + output_video
+    
     # Run the ffmpeg command to merge the files
     cmd = [
         'ffmpeg',
@@ -162,7 +165,7 @@ if u_continue == 'y':
     # Merge the video and audio files
     merge(u_video, u_audio)
     # Prompt the user to delete the separate video and audio files
-    u_delete = input('Do you want to delte the subfiles? y/n: ')
+    u_delete = input('Do you want to delete the subfiles? y/n: ')
     if u_delete == '':
         u_delete = 'y'
     if u_delete == 'y':
