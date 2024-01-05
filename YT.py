@@ -102,12 +102,16 @@ def download(uservideo, u_video):
 def merge(video, audio):
     input_video = video
     input_audio = audio
-    output_video = input('Output put .mp4 at the end: ')
+    output_video = input('Output put .mp4 at the end | Defaulting to ouput_videoName.mp4: ')
 
     # Prompt the user to specify the output file name
     if output_video == '':
         output_video = 'ouput_'+video
 
+    # Check if directory Output exists, if not create it
+    if not os.path.exists('Output'):
+        os.makedirs('Output')
+    
     # Add directory path to the output file name
     output_video = 'Output/' + output_video
     
