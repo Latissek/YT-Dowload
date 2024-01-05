@@ -31,7 +31,7 @@ def download(uservideo, u_video):
         if video == 'y':
             # Check if 1080p is available
             if yt.streams.get_by_itag(137) is not None:
-                print('1080p available ; tag 137')
+                print('1080p available ; tag 137 ; press enter to use this stream')
                 default_c = 137
             else:
                 print('1080p unavailable')
@@ -40,14 +40,14 @@ def download(uservideo, u_video):
         elif video == 'n':
             # Check for the highest quality audio stream
             if yt.streams.get_by_itag(251) is not None:
-                print('Highest quality audio available ; tag 251')
+                print('Highest quality audio available ; tag 251 ; press enter to use this stream')
                 default_c = 251
             print(yt.streams.filter(only_audio=True))
         # If u_video is None then print both the video and audio streams and check if 1080p is available
         else:
             # Check if 1080p is available
             if yt.streams.get_by_itag(137) is not None:
-                print('1080p available ; tag 137')
+                print('1080p available ; tag 137 ; press enter to use this stream')
                 default_c = 137
             else:
                 print('1080p unavailable')
